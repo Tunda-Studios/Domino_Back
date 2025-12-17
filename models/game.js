@@ -41,6 +41,18 @@ const GameSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
 
+    moves: [
+      {
+        userId: String,
+        tile: [Number],
+        end: String,
+        createdAt: { type: Date, default: Date.now }
+      }
+    ],
+
+    // for inbox ordering / metadata
+    lastMoveAt: { type: Date, default: Date.now },
+
 }, { timestamps: true } );
 
 module.exports = mongoose.model('Game', GameSchema);

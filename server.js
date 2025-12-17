@@ -3,6 +3,10 @@ const express = require('express');
 const app = express();
 require("dotenv").config();
 
+const http = require("http"); 
+const { WebSocket } = require("ws"); 
+const gameEvents = require("./events/gameEvents");
+
 // get config
 const config = require(__basedir + "/config");
 const { PORT: port } = config;
@@ -12,6 +16,7 @@ require(__basedir + "/helpers/mongoose");
 const mongoose = require('mongoose');
 
 const gameRouter = require('./routes/game');
+const { type } = require('os');
 
 app.use(express.json());
 
@@ -59,6 +64,36 @@ app.get('/debug/games-all', async (req, res) => {
     res.status(500).json({ error: e.message });
   }
 });
+
+//create http server + websockets
+const server = http.createServer(app);
+
+//create websocket server
+const wss = new WebSocket.Server({ server });
+
+console.log("WebSocket server created");
+
+//handle websocket connections
+wss.on('connection', (ws) => {
+  console.log("🔌 A client connected via WebSocket");
+  ws.on("close", () => console.log("❌ Client disconnected"));
+});
+
+//broadcast game updates
+
+gameEvents.on("Update", (game) => {
+const json = JSON.stringify({type: "Update", game: game});
+});
+
+ console.log("📣 Broadcasting update to clients...");
+
+ wss.clients.forEach(client => {
+    if (client.readyState === 1) {
+      client.send(json);
+    }
+  });
+
+
 
 // Start the server
 app.listen(port, () => {
