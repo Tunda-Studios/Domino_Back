@@ -4,7 +4,7 @@ const app = express();
 require("dotenv").config();
 
 const http = require("http"); 
-const { WebSocket } = require("ws"); 
+const WebSocket  = require("ws"); 
 const gameEvents = require("./events/gameEvents");
 
 // get config
@@ -74,9 +74,19 @@ const wss = new WebSocket.Server({ server });
 console.log("WebSocket server created");
 
 //handle websocket connections
-wss.on('connection', (ws) => {
-  console.log("🔌 A client connected via WebSocket");
-  ws.on("close", () => console.log("❌ Client disconnected"));
+wss.on("connection", (ws) => {
+  console.log("🔌 WS client connected");
+
+  ws.on("close", () => {
+    console.log("❌ WS client disconnected");
+  });
+
+  ws.on("message", (msg) => {
+    console.log("📩 WS message:", msg.toString());
+  });
+
+  // handshake test
+  ws.send(JSON.stringify({ type: "hello", msg: "connected" }));
 });
 
 //broadcast game updates
@@ -96,6 +106,6 @@ const json = JSON.stringify({type: "Update", game: game});
 
 
 // Start the server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+server.listen(port, () => {
+  console.log(`🚀 HTTP + WS running on port ${port}`);
 });
