@@ -102,9 +102,8 @@ const userSchema = new mongoose.Schema(
 
 
 
-// ---------------------------
+
 // Password hashing
-// ---------------------------
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
 
@@ -118,10 +117,8 @@ userSchema.pre('save', async function (next) {
 });
 
 
-// ---------------------------
-// Instance Methods
-// ---------------------------
 
+// Instance Methods
 // Validate password for login
 userSchema.methods.comparePassword = function (inputPassword) {
   return bcryptjs.compare(inputPassword, this.password);

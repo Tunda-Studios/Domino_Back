@@ -75,14 +75,14 @@ console.log("WebSocket server created");
 
 //handle websocket connections
 wss.on("connection", (ws) => {
-  console.log("🔌 WS client connected");
+  console.log(" WS client connected");
 
   ws.on("close", () => {
-    console.log("❌ WS client disconnected");
+    console.log(" WS client disconnected");
   });
 
   ws.on("message", (msg) => {
-    console.log("📩 WS message:", msg.toString());
+    console.log(" WS message:", msg.toString());
   });
 
   // handshake test
@@ -95,7 +95,7 @@ gameEvents.on("Update", (game) => {
 const json = JSON.stringify({type: "Update", game: game});
 });
 
- console.log("📣 Broadcasting update to clients...");
+ console.log(" Broadcasting update to clients...");
 
  wss.clients.forEach(client => {
     if (client.readyState === 1) {
@@ -107,5 +107,5 @@ const json = JSON.stringify({type: "Update", game: game});
 
 // Start the server
 server.listen(port, () => {
-  console.log(`🚀 HTTP + WS running on port ${port}`);
+  console.log(` HTTP + WS running on port ${port}`);
 });
